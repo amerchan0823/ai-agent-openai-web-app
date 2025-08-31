@@ -16,7 +16,9 @@ namespace dotnetfashionassistant.Models
         public required string Size { get; set; }
         public int Quantity { get; set; }
         public decimal Price { get; set; }
-    }    public static class CartService
+    }
+
+    public static class CartService
     {
         // In-memory cart storage - in a real application, this would use session state or a database
         private static readonly List<CartItem> Cart = new();
@@ -28,7 +30,7 @@ namespace dotnetfashionassistant.Models
         {
             return Cart;
         }
-        
+
         /// <summary>
         /// Gets the cart summary including items and total cost
         /// </summary>
@@ -36,20 +38,22 @@ namespace dotnetfashionassistant.Models
         public static CartSummary GetCartSummary()
         {
             decimal totalCost = Cart.Sum(item => item.Quantity * item.Price);
-            
+
             return new CartSummary
             {
                 Items = Cart,
                 TotalCost = totalCost
             };
-        }/// <summary>
+        }
+
+        /// <summary>
         /// Adds an item to the cart or increases quantity if it already exists
         /// </summary>
         public static void AddToCart(int productId, string productName, string size, int quantity, decimal price)
         {
             // Check if the item already exists in the cart with the same product ID and size
             var existingItem = Cart.FirstOrDefault(item => item.ProductId == productId && item.Size == size);
-            
+
             if (existingItem != null)
             {
                 // If item exists, just update the quantity
@@ -75,7 +79,7 @@ namespace dotnetfashionassistant.Models
         public static bool UpdateCartItemQuantity(int productId, string size, int quantity)
         {
             var existingItem = Cart.FirstOrDefault(item => item.ProductId == productId && item.Size == size);
-            
+
             if (existingItem == null)
             {
                 return false;
@@ -97,12 +101,12 @@ namespace dotnetfashionassistant.Models
         public static bool RemoveFromCart(int productId, string size)
         {
             var existingItem = Cart.FirstOrDefault(item => item.ProductId == productId && item.Size == size);
-            
+
             if (existingItem == null)
             {
                 return false;
             }
-            
+
             Cart.Remove(existingItem);
             return true;
         }

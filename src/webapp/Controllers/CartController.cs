@@ -9,7 +9,8 @@ namespace dotnetfashionassistant.Controllers
     [Route("api/[controller]")]
     [Produces("application/json")]
     public class CartController : ControllerBase
-    {        /// <summary>
+    {
+        /// <summary>
         /// Gets all items in the shopping cart along with the total cost
         /// </summary>
         /// <returns>A cart summary containing items and total cost</returns>
@@ -18,7 +19,9 @@ namespace dotnetfashionassistant.Controllers
         public ActionResult<CartSummary> GetCart()
         {
             return Ok(CartService.GetCartSummary());
-        }        /// <summary>
+        }
+
+        /// <summary>
         /// Adds an item to the shopping cart
         /// </summary>
         /// <param name="request">The item to add to the cart</param>
@@ -49,11 +52,15 @@ namespace dotnetfashionassistant.Controllers
             if (stock < request.Quantity)
             {
                 return BadRequest($"Not enough stock. Only {stock} items available");
-            }            // Add to cart
+            }
+
+            // Add to cart
             CartService.AddToCart(request.ProductId, product.ProductName, request.Size, request.Quantity, product.Price);
-            
+
             return Ok(CartService.GetCartSummary());
-        }        /// <summary>
+        }
+
+        /// <summary>
         /// Updates the quantity of an item in the cart
         /// </summary>
         /// <param name="productId">The product ID</param>
@@ -85,15 +92,19 @@ namespace dotnetfashionassistant.Controllers
                 {
                     return BadRequest($"Not enough stock. Only {stock} items available");
                 }
-            }            // Update the cart
+            }
+
+            // Update the cart
             bool success = CartService.UpdateCartItemQuantity(productId, size, request.Quantity);
             if (!success)
             {
                 return NotFound("Item not found in cart");
             }
-            
+
             return Ok(CartService.GetCartSummary());
-        }        /// <summary>
+        }
+
+        /// <summary>
         /// Removes an item from the cart
         /// </summary>
         /// <param name="productId">The product ID</param>
@@ -103,14 +114,17 @@ namespace dotnetfashionassistant.Controllers
         [ProducesResponseType(typeof(CartSummary), 200)]
         [ProducesResponseType(404)]
         public ActionResult<CartSummary> RemoveFromCart(int productId, string size)
-        {            bool success = CartService.RemoveFromCart(productId, size);
+        {
+            bool success = CartService.RemoveFromCart(productId, size);
             if (!success)
             {
                 return NotFound("Item not found in cart");
             }
-            
+
             return Ok(CartService.GetCartSummary());
-        }        /// <summary>
+        }
+
+        /// <summary>
         /// Clears all items from the cart
         /// </summary>
         /// <returns>Empty cart summary with zero total cost</returns>
